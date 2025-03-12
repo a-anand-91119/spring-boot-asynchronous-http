@@ -11,7 +11,9 @@ public class Constants {
     public static final String REQUEST_ID = "requestId";
 
     public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
     public static final String TEST = "asdasd";
+
     private Constants() {
     }
 
