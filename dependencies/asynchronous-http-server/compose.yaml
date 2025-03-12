@@ -23,3 +23,14 @@ services:
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,DOCKER://:9093,EXTERNAL://:9094
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,DOCKER:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,DOCKER://host.docker.internal:9093,EXTERNAL://localhost:9094
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: kafbat/kafka-ui:latest
+    ports:
+      - 9095:8080
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_CLUSTERS_0_NAME = local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS = kafka:9092

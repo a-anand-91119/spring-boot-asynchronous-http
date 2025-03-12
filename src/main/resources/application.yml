@@ -5,7 +5,17 @@ spring:
     compose:
       enabled: true
       file: ./dependencies/asynchronous-http-server/compose.yaml
-
+  kafka:
+    bootstrap-servers: localhost:9094
 project:
   ui-app:
     hosts: "*"
+  kafka:
+    requestTopic:
+      name: IncomingRequests
+      partitions: 8
+      replicas: 1
+    responseTopic:
+      name: ProcessedResponses
+      partitions: 8
+      replicas: 1
