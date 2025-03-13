@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.micrometer.KafkaTemplateObservation;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.Map;
@@ -37,6 +38,9 @@ public class KafkaConfiguration {
     public KafkaTemplate<String, JsonSerializable> jsonSerializablePublicKafkaTemplate(
             @Qualifier(Constants.JSON_SERIALIZABLE_PUBLIC_CLUSTER_PRODUCER_FACTORY) ProducerFactory<String, JsonSerializable> jsonSerializableProducerFactory
     ) {
-        return new KafkaTemplate<>(jsonSerializableProducerFactory);
+        KafkaTemplate<String, JsonSerializable> kafkaTemplate = new KafkaTemplate<>(jsonSerializableProducerFactory);
+        kafkaTemplate.setObservationEnabled(true);
+        kafkaTemplate.setObservationConvention(new KafkaTemplateObservation.DefaultKafkaTemplateObservationConvention());
+        return kafkaTemplate;
     }
 }

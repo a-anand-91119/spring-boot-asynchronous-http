@@ -7,6 +7,16 @@ spring:
       file: ./dependencies/asynchronous-http-server/compose.yaml
   kafka:
     bootstrap-servers: localhost:9094
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://localhost:4318/v1/traces
+
 project:
   ui-app:
     hosts: "*"

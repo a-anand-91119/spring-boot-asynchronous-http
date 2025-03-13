@@ -34,3 +34,10 @@ services:
     environment:
       - KAFKA_CLUSTERS_0_NAME = local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS = kafka:9092
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"

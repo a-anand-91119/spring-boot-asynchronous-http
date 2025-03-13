@@ -30,18 +30,17 @@ dependencies {
 	implementation(libs.spring.kafka)
 	implementation(libs.springdoc.webmvc.ui)
 
-	compileOnly(libs.lombok)
+	implementation(libs.opentelemetry.exporter.otlp)
+	implementation(libs.micrometer.tracing.bridge.otel)
 
+	compileOnly(libs.lombok)
 	developmentOnly(libs.spring.boot.compose)
 	developmentOnly(libs.spring.boot.devtools)
-
 	annotationProcessor(libs.lombok)
 
 	testImplementation(libs.spring.boot.test)
 	testImplementation(libs.spring.kafka.test)
-
 	testRuntimeOnly(libs.junit.platform.launcher)
-
 }
 
 tasks.withType<Test> {
