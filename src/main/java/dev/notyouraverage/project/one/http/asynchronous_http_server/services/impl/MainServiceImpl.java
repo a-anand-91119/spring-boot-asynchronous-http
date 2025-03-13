@@ -39,7 +39,7 @@ public class MainServiceImpl implements MainService {
                 .name(name)
                 .build();
 
-        CompletableFuture<SendResult<String, JsonSerializable>> result = kafkaTemplate.send(requestTopic, UUID.randomUUID().toString(), processRequestPayload);
-//        result.whenComplete((record, _) -> log.info("Sent({}): {}", record.getProducerRecord().key(), record.getProducerRecord().value()));
+        CompletableFuture<SendResult<String, JsonSerializable>> result = kafkaTemplate
+                .send(requestTopic, UUID.randomUUID().toString(), processRequestPayload);
     }
 }

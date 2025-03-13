@@ -40,7 +40,8 @@ public class KafkaConfiguration {
     ) {
         KafkaTemplate<String, JsonSerializable> kafkaTemplate = new KafkaTemplate<>(jsonSerializableProducerFactory);
         kafkaTemplate.setObservationEnabled(true);
-        kafkaTemplate.setObservationConvention(new KafkaTemplateObservation.DefaultKafkaTemplateObservationConvention());
+        kafkaTemplate
+                .setObservationConvention(new KafkaTemplateObservation.DefaultKafkaTemplateObservationConvention());
         return kafkaTemplate;
     }
 }
