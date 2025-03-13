@@ -2,7 +2,7 @@ package dev.notyouraverage.project.one.http.asynchronous_http_server.services.im
 
 import dev.notyouraverage.project.one.http.asynchronous_http_server.constants.Constants;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.core.JsonSerializable;
-import dev.notyouraverage.project.one.http.asynchronous_http_server.dtos.kafka.output.ProcessRequestPayload;
+import dev.notyouraverage.project.dtos.kafka.ProcessRequestPayload;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.services.MainService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,7 @@ public class MainServiceImpl implements MainService {
     private final String requestTopic;
 
     public MainServiceImpl(
-            @Qualifier(Constants.JSON_SERIALIZABLE_PUBLIC_KAFKA_TEMPLATE) KafkaTemplate<String, JsonSerializable> jsonPublicKafkaTemplate,
-            KafkaTemplate<String, JsonSerializable> kafkaTemplate,
+            @Qualifier(Constants.JSON_SERIALIZABLE_KAFKA_TEMPLATE) KafkaTemplate<String, JsonSerializable> kafkaTemplate,
             @Value("${project.kafka.requestTopic.name}") String requestTopic
     ) {
         this.kafkaTemplate = kafkaTemplate;

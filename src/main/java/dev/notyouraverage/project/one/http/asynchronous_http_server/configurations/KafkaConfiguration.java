@@ -26,7 +26,7 @@ public class KafkaConfiguration {
 
     private final KafkaProperties kafkaProperties;
 
-    @Bean(Constants.JSON_SERIALIZABLE_PUBLIC_CLUSTER_PRODUCER_FACTORY)
+    @Bean(Constants.JSON_SERIALIZABLE_PRODUCER_FACTORY)
     public ProducerFactory<String, JsonSerializable> jsonSerializablePublicProducerFactory() {
         Map<String, Object> props = KafkaConfigurationUtils.buildCommonProducerConfigs(kafkaProperties);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -34,9 +34,9 @@ public class KafkaConfiguration {
         return new DefaultKafkaProducerFactory<>(props);
     }
 
-    @Bean(Constants.JSON_SERIALIZABLE_PUBLIC_KAFKA_TEMPLATE)
+    @Bean(Constants.JSON_SERIALIZABLE_KAFKA_TEMPLATE)
     public KafkaTemplate<String, JsonSerializable> jsonSerializablePublicKafkaTemplate(
-            @Qualifier(Constants.JSON_SERIALIZABLE_PUBLIC_CLUSTER_PRODUCER_FACTORY) ProducerFactory<String, JsonSerializable> jsonSerializableProducerFactory
+            @Qualifier(Constants.JSON_SERIALIZABLE_PRODUCER_FACTORY) ProducerFactory<String, JsonSerializable> jsonSerializableProducerFactory
     ) {
         KafkaTemplate<String, JsonSerializable> kafkaTemplate = new KafkaTemplate<>(jsonSerializableProducerFactory);
         kafkaTemplate.setObservationEnabled(true);
