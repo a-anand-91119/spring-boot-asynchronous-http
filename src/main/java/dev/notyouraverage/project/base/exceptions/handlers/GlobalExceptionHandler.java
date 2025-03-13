@@ -17,6 +17,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,15 @@ public class GlobalExceptionHandler {
         );
         ErrorResponse errorResponse = ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR);
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, List.of(errorResponse));
+    }
+
+    @ExceptionHandler(value = { MissingServletRequestParameterException.class })
+    public ResponseEntity<ResponseWrapper<Void>> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException exception
+    ) {
+        ErrorResponse errorResponse = ErrorResponse
+                .from(ErrorCode.INPUT_VALIDATION_ERROR, exception.getBody().getDetail());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, Collections.singletonList(errorResponse));
     }
 
     @ExceptionHandler(value = { MethodArgumentNotValidException.class })

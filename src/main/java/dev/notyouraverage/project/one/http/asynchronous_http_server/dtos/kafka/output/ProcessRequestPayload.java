@@ -8,4 +8,6 @@ import lombok.Data;
 @Builder
 public class ProcessRequestPayload implements JsonSerializable {
     private String requestId;
+
+    private String name;
 }
