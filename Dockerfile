@@ -23,7 +23,7 @@ FROM docker.io/amazoncorretto:23
 WORKDIR /app
 
 # Copy the built application from the builder stage
-COPY --from=builder /app/build/libs/asynchronous-http-server-0.0.1-SNAPSHOT.jar
+COPY --from=builder /app/build/libs/asynchronous-http-server-0.0.1-SNAPSHOT.jar app.jar
 
 # Default command
 CMD ["java", "-jar", "app.jar"]
