@@ -1,8 +1,8 @@
 package dev.notyouraverage.project.one.http.asynchronous_http_server.services.impl;
 
 import dev.notyouraverage.project.one.http.asynchronous_http_server.constants.Constants;
-import dev.notyouraverage.project.one.http.asynchronous_http_server.core.JsonSerializable;
-import dev.notyouraverage.project.dtos.kafka.ProcessRequestPayload;
+import dev.notyouraverage.project.core.JsonSerializable;
+import dev.notyouraverage.project.core.dtos.kafka.ProcessRequestPayload;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.services.MainService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;

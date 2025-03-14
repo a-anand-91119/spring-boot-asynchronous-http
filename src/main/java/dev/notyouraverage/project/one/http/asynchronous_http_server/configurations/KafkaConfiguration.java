@@ -2,7 +2,7 @@ package dev.notyouraverage.project.one.http.asynchronous_http_server.configurati
 
 import dev.notyouraverage.project.one.http.asynchronous_http_server.constants.Constants;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.configurations.utils.KafkaConfigurationUtils;
-import dev.notyouraverage.project.one.http.asynchronous_http_server.core.JsonSerializable;
+import dev.notyouraverage.project.core.JsonSerializable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
