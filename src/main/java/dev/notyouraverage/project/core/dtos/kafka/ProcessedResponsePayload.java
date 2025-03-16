@@ -15,5 +15,5 @@ public class ProcessedResponsePayload implements JsonSerializable {
 
     private String name;
 
-    private Long count;
+    private Integer count;
 }

@@ -6,15 +6,17 @@ import dev.notyouraverage.project.core.JsonSerializable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.micrometer.KafkaTemplateObservation;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.Map;
@@ -43,5 +45,27 @@ public class KafkaConfiguration {
         kafkaTemplate
                 .setObservationConvention(new KafkaTemplateObservation.DefaultKafkaTemplateObservationConvention());
         return kafkaTemplate;
+    }
+
+    @Bean(Constants.JSON_SERIALIZABLE_CONSUMER_FACTORY)
+    public ConsumerFactory<String, JsonSerializable> salesforceDelayedQueueConsumerFactory() {
+        Map<String, Object> props = KafkaConfigurationUtils.buildCommonConsumerConfigs(kafkaProperties);
+        props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class.getName());
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+        props.put("spring.json.trusted.packages", "dev.notyouraverage.project.*");
+
+        ErrorHandlingDeserializer<String> keyErrorHandlingDeserializer = new ErrorHandlingDeserializer<>();
+        ErrorHandlingDeserializer<JsonSerializable> valueErrorHandlingDeserializer = new ErrorHandlingDeserializer<>();
+        return new DefaultKafkaConsumerFactory<>(props, keyErrorHandlingDeserializer, valueErrorHandlingDeserializer);
+    }
+
+    @Bean(Constants.JSON_SERIALIZABLE_CONCURRENT_LISTENER_CONTAINER_FACTORY)
+    public ConcurrentKafkaListenerContainerFactory<String, JsonSerializable> listenerFactory(
+            @Qualifier(Constants.JSON_SERIALIZABLE_CONSUMER_FACTORY) ConsumerFactory<String, JsonSerializable> consumerFactory
+    ) {
+        ConcurrentKafkaListenerContainerFactory<String, JsonSerializable> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.getContainerProperties().setObservationEnabled(true);
+        factory.setConsumerFactory(consumerFactory);
+        return factory;
     }
 }

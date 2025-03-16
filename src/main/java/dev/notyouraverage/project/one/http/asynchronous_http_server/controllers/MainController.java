@@ -2,6 +2,7 @@ package dev.notyouraverage.project.one.http.asynchronous_http_server.controllers
 
 import dev.notyouraverage.project.base.configurations.RequestContext;
 import dev.notyouraverage.project.base.dtos.response.wrapper.ResponseWrapper;
+import dev.notyouraverage.project.one.http.asynchronous_http_server.dtos.response.ProcessedRequestResponse;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.services.MainService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,8 @@ public class MainController {
     private final RequestContext requestContext;
 
     @GetMapping("send")
-    public ResponseEntity<ResponseWrapper<String>> send(@RequestParam("name") @NotBlank String name) {
-        mainService.processRequest(requestContext.getRequestId(), name);
-        return ResponseEntity.ok(ResponseWrapper.success(requestContext.getRequestId()));
+    public ResponseEntity<ResponseWrapper<ProcessedRequestResponse>> send(@RequestParam("name") @NotBlank String name) {
+        ProcessedRequestResponse response = mainService.processRequest(requestContext.getRequestId(), name);
+        return ResponseEntity.ok(ResponseWrapper.success(response));
     }
 }

@@ -11,4 +11,8 @@ public class KafkaConfigurationUtils {
     public static Map<String, Object> buildCommonProducerConfigs(KafkaProperties kafkaProperties) {
         return kafkaProperties.buildProducerProperties(null);
     }
+
+    public static Map<String, Object> buildCommonConsumerConfigs(KafkaProperties kafkaProperties) {
+        return kafkaProperties.buildConsumerProperties(null);
+    }
 }
