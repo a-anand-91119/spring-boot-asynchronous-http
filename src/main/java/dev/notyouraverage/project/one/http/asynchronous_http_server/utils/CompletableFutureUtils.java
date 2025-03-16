@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompletableFutureUtils {
-    
+
     public static <T> T unchekedGet(CompletableFuture<T> completableFuture) {
         try {
             return completableFuture.get();

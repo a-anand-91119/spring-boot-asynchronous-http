@@ -1,12 +1,10 @@
 package dev.notyouraverage.project.one.http.asynchronous_http_server.listeners;
 
-import dev.notyouraverage.project.core.dtos.kafka.ProcessRequestPayload;
 import dev.notyouraverage.project.core.dtos.kafka.ProcessedResponsePayload;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.constants.Constants;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.helpers.BlockRequestHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;

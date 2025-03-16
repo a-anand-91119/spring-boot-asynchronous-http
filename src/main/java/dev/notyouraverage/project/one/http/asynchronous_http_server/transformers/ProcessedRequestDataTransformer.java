@@ -7,7 +7,9 @@ import dev.notyouraverage.project.one.http.asynchronous_http_server.dtos.respons
 @Transformer
 public class ProcessedRequestDataTransformer {
 
-    public ProcessedRequestResponse convertToProcessedRequestResponse(ProcessedResponsePayload processedResponsePayload) {
+    public ProcessedRequestResponse convertToProcessedRequestResponse(
+            ProcessedResponsePayload processedResponsePayload
+    ) {
         return ProcessedRequestResponse.builder()
                 .requestId(processedResponsePayload.getRequestId())
                 .count(processedResponsePayload.getCount())

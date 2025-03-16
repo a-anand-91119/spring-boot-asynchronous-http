@@ -8,6 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 public class ProcessedRequestResponse {
     private String requestId;
+
     private String name;
+
     private Integer count;
 }

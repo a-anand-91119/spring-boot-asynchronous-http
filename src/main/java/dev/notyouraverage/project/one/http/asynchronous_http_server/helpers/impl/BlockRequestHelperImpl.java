@@ -1,6 +1,5 @@
 package dev.notyouraverage.project.one.http.asynchronous_http_server.helpers.impl;
 
-
 import dev.notyouraverage.project.base.annotations.ServiceHelper;
 import dev.notyouraverage.project.core.dtos.kafka.ProcessedResponsePayload;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.helpers.BlockRequestHelper;
@@ -11,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BlockRequestHelperImpl implements BlockRequestHelper {
 
     private final ConcurrentHashMap<String, Object> lockMap;
+
     private final ConcurrentHashMap<String, ProcessedResponsePayload> responseDataMap;
 
     public BlockRequestHelperImpl() {
