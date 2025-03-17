@@ -1,6 +1,6 @@
 # Stage 1: Build
 # FROM docker.io/amazoncorretto:23 AS builder
-FROM gradle:8.12.1-jdk23-alpine AS builder
+FROM gradle:8.12.1-jdk23 AS builder
 WORKDIR /app
 
 # Copy only necessary files to take advantage of caching
