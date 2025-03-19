@@ -6,16 +6,19 @@ spring:
       enabled: true
       file: ./dependencies/asynchronous-http-server/compose.yaml
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:"localhost:9094"}
+  threads:
+    virtual:
+      enabled: ${ENABLE_VIRTUAL_THREADS:true}
 
 management:
   tracing:
-    enabled: true
+    enabled: ${ENABLE_TRACES:true}
     sampling:
-      probability: 1.0
+      probability: ${TRACES_SAMPLING_RATE:1.0}
   otlp:
     tracing:
-      endpoint: http://localhost:4318/v1/traces
+      endpoint: ${OLTP_TRACING_ENDPOINT:http://localhost:4318/v1/traces}
 
 project:
   ui-app:
