@@ -41,6 +41,7 @@ docker-image-build:
 
 argocd-deployment:
   stage: deploy
+  interruptible: false
   image:
     name: alpine/helm
     entrypoint: [ "" ]
