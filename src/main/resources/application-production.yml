@@ -5,7 +5,8 @@ spring:
   kafka:
     security:
       protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_PLAINTEXT}
-    sasl:
-      mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
-      jaas:
-        config: ${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username=${KAFKA_AUTH_USERNAME} password=${KAFKA_AUTH_USERNAME};}
+    properties:
+      sasl:
+        mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
+        jaas:
+          config: ${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username=${KAFKA_AUTH_USERNAME} password=${KAFKA_AUTH_USERNAME};}

@@ -26,4 +26,4 @@ WORKDIR /app
 COPY --from=builder /app/build/libs/asynchronous-http-server-0.0.1-SNAPSHOT.jar app.jar
 
 # Default command
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Djava.security.manager=allow", "-jar", "app.jar"]
