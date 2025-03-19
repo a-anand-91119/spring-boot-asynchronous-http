@@ -44,11 +44,6 @@ environmentVariables:
     value: 0.0
   - name: OLTP_TRACING_ENDPOINT
     value: http://locahost
-  - name: KAFKA_BOOTSTRAP_SERVERS
-    valueFrom:
-      secretKeyRef:
-        key: KAFKA_BOOTSTRAP_SERVERS
-        name: *sealed-secret-name
   - name: KAFKA_AUTH_USERNAME
     valueFrom:
       secretKeyRef:
