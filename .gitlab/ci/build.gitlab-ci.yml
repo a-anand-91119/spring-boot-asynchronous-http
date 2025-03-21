@@ -105,7 +105,7 @@ docker-image-build:
   script:
     - |
       # Use buildah with layer caching
-      buildah build --cache-from $CI_REGISTRY_IMAGE:latest --layers -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:latest
+      buildah build --cache-from $CI_REGISTRY_IMAGE --layers -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:latest
       buildah push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
       
       # Only push latest tag for main branch
