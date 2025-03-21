@@ -38,34 +38,100 @@ docker-image-build:
     - buildah push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   interruptible: true
 
-
 argocd-deployment:
   stage: deploy
   interruptible: false
   image:
-    name: alpine/helm
+    name: alpine/helm:3.12.0
     entrypoint: [ "" ]
   variables:
     NAMESPACE: spring-projects
     ARGOCD_DEPLOY_SUB_PATH: argocd-gitops/zeus-k8s/spring-projects/asynchronous-http-server
     ARGOCD_REPOSITORY: argocd-gitops
+    HELM_EXPERIMENTAL_OCI: "1"
+    CHART_VERSION: "0.0.1"
+    CHART_REGISTRY: "registry.gitlab.notyouraverage.dev/marketing-plg/helm-charts/charts/spring-boot-app"
   before_script:
-    - git clone --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.notyouraverage.dev/marketing-plg/helm-charts.git
+    - apk add --no-cache git
     - git clone --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.notyouraverage.dev/a.anand.91119/${ARGOCD_REPOSITORY}.git
+    - echo "Logging in to container registry..."
+    - helm registry login ${CI_REGISTRY} -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
   script:
     - |
+      # Determine which values file to use
       if [ -f "./deployment/values.yaml" ]; then
         VALUES_FILE="./deployment/values.yaml"
       else
-        VALUES_FILE="helm-charts/spring-boot-app/values.yaml"
+        # Pull specific values file from repo if needed or use defaults
+        echo "No specific values file found, using defaults with image overrides"
+        VALUES_FILE="values.yaml"
+        echo "image:
+          repository: ${CI_REGISTRY_IMAGE}
+          tag: ${CI_COMMIT_SHORT_SHA}" > ${VALUES_FILE}
       fi
-    - helm template release helm-charts/spring-boot-app --values $VALUES_FILE  --namespace ${NAMESPACE} --set image.repository=${CI_REGISTRY_IMAGE} --set image.tag=${CI_COMMIT_SHORT_SHA} --output-dir ./
-    - rm -rf ${ARGOCD_DEPLOY_SUB_PATH}/*
-    - mv ./spring-boot-app/templates/* ${ARGOCD_DEPLOY_SUB_PATH}/
-    - cd ${ARGOCD_REPOSITORY}
-    - git config --global user.email "a.anand.91119@notyouraverage.dev"
-    - git config --global user.name "CI/CD Bot"
-    - git add .
-    - git commit -m "Update ${CI_PROJECT_NAME} commit ${CI_COMMIT_SHORT_SHA}"
-    - git remote set-url origin https://gitlab-ci-token:${REPO_WRITE_TOKEN}@gitlab.notyouraverage.dev/a.anand.91119/${ARGOCD_REPOSITORY}.git
-    - git push origin main
+      
+      # Pull the chart from the registry
+      echo "Pulling Helm chart from registry..."
+      helm pull oci://${CHART_REGISTRY} --version ${CHART_VERSION} --destination ./charts
+      
+      # Extract the chart name from the downloaded tgz file
+      CHART_TGZ=$(ls ./charts/*.tgz)
+      CHART_NAME=$(basename ${CHART_TGZ} .tgz)
+      
+      # Template using the chart from the registry
+      echo "Templating Helm chart..."
+      helm template release ./charts/${CHART_NAME}.tgz --values ${VALUES_FILE} --namespace ${NAMESPACE} \
+        --set image.repository=${CI_REGISTRY_IMAGE} \
+        --set image.tag=${CI_COMMIT_SHORT_SHA} \
+        --output-dir ./manifests
+      
+      # Copy to GitOps repository
+      echo "Updating GitOps repository..."
+      rm -rf ${ARGOCD_DEPLOY_SUB_PATH}/*
+      cp -r ./manifests/${CHART_NAME}/templates/* ${ARGOCD_DEPLOY_SUB_PATH}/
+      
+      # Clean up template artifacts
+      cd ${ARGOCD_REPOSITORY}
+      
+      # Remove Helm test resources from GitOps (optional)
+      echo "Removing test resources from GitOps deployment..."
+      rm -rf ${ARGOCD_DEPLOY_SUB_PATH}/tests
+      
+      # Commit and push to GitOps repository
+      git config --global user.email "a.anand.91119@notyouraverage.dev"
+      git config --global user.name "CI/CD Bot"
+      git add .
+      git commit -m "Update ${CI_PROJECT_NAME} to commit ${CI_COMMIT_SHORT_SHA} using chart version ${CHART_VERSION}"
+      git remote set-url origin https://gitlab-ci-token:${REPO_WRITE_TOKEN}@gitlab.notyouraverage.dev/a.anand.91119/${ARGOCD_REPOSITORY}.git
+      git push origin main
+#
+#argocd-deployment:
+#  stage: deploy
+#  interruptible: false
+#  image:
+#    name: alpine/helm
+#    entrypoint: [ "" ]
+#  variables:
+#    NAMESPACE: spring-projects
+#    ARGOCD_DEPLOY_SUB_PATH: argocd-gitops/zeus-k8s/spring-projects/asynchronous-http-server
+#    ARGOCD_REPOSITORY: argocd-gitops
+#  before_script:
+#    - git clone --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.notyouraverage.dev/marketing-plg/helm-charts.git
+#    - git clone --depth 1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.notyouraverage.dev/a.anand.91119/${ARGOCD_REPOSITORY}.git
+#  script:
+#    - |
+#      if [ -f "./deployment/values.yaml" ]; then
+#        VALUES_FILE="./deployment/values.yaml"
+#      else
+#        VALUES_FILE="helm-charts/spring-boot-app/values.yaml"
+#      fi
+#    - helm template release helm-charts/spring-boot-app --values $VALUES_FILE  --namespace ${NAMESPACE} --set image.repository=${CI_REGISTRY_IMAGE} --set image.tag=${CI_COMMIT_SHORT_SHA} --output-dir ./
+#    - rm -rf ${ARGOCD_DEPLOY_SUB_PATH}/*
+#    - mv ./spring-boot-app/templates/* ${ARGOCD_DEPLOY_SUB_PATH}/
+#    - cd ${ARGOCD_REPOSITORY}
+#    - git config --global user.email "a.anand.91119@notyouraverage.dev"
+#    - git config --global user.name "CI/CD Bot"
+#    - git add .
+#    - git commit -m "Update ${CI_PROJECT_NAME} commit ${CI_COMMIT_SHORT_SHA}"
+#    - git remote set-url origin https://gitlab-ci-token:${REPO_WRITE_TOKEN}@gitlab.notyouraverage.dev/a.anand.91119/${ARGOCD_REPOSITORY}.git
+#    - git push origin main
