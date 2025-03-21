@@ -13,7 +13,7 @@ export const options = {
 
 export default function () {
     let name = randomChars(5)
-    let res = http.get(`http://localhost:8080/api/v1/request/send?name=${name}`)
+    let res = http.get(`http://localhost:61113/api/v1/request/send?name=${name}`)
 
     check(res, {'success': (r) => r.status === 200})
 
