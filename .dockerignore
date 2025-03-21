@@ -1,0 +1,63 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build outputs
+build/
+out/
+target/
+*.class
+
+# Gradle
+.gradle/
+!gradle/wrapper/
+
+# Local configuration
+*.log
+*.swp
+*.bak
+*.tmp
+*.temp
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Test files
+**/test/resources
+performance-tests/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Deployment
+.gitlab/
+.gitlab-ci.yml
+deployment/
+
+# Large binaries
+*.jar
+*.war
+*.zip
+*.tar.gz
+*.rar
+
+# Exclude everything that's not needed for the build
+!src/
+!build.gradle.kts
+!settings.gradle.kts
+!gradle.properties
+!libs.versions.toml
+!spotless.xml
+!gradlew
+!gradle/wrapper/ 

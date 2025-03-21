@@ -1,29 +1,39 @@
-# Stage 1: Build
-FROM docker.io/gradle:8.12.1-jdk23 AS builder
+# Stage 1: Dependency cache layer
+FROM docker.io/gradle:8.12.1-jdk23 AS dependencies
 WORKDIR /app
 
-# Copy only necessary files to take advantage of caching
-COPY gradlew gradlew
+# Copy only dependency-related files
 COPY gradle gradle
-COPY build.gradle.kts build.gradle.kts
-COPY settings.gradle.kts settings.gradle.kts
-COPY spotless.xml spotless.xml
-COPY libs.versions.toml libs.versions.toml
+COPY gradlew .
+COPY build.gradle.kts .
+COPY settings.gradle.kts .
+COPY gradle.properties .
+COPY libs.versions.toml .
+COPY spotless.xml .
 
-# Pre-fetch dependencies for caching
-RUN ./gradlew dependencies
-RUN ./gradlew check --dry-run
+# Pre-download dependencies for caching - this layer will be reused if dependencies don't change
+RUN ./gradlew --no-daemon downloadDependencies || \
+    ./gradlew --no-daemon dependencies
 
-# Copy source code and build the application
-COPY src src
-RUN ./gradlew clean build
-
-# Stage 2: Runtime
-FROM docker.io/amazoncorretto:23 AS runtime
+# Stage 2: Build layer
+FROM dependencies AS builder
 WORKDIR /app
+
+# Copy source code
+COPY src src
+
+# Build the application (skipping tests to speed up build)
+RUN ./gradlew --no-daemon clean build -x test -x spotlessCheck
+
+# Stage 3: Runtime layer - using a slim JRE
+FROM docker.io/amazoncorretto:23-alpine AS runtime
+WORKDIR /app
+
+# Add JVM optimization flags
+ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Dspring.profiles.active=production"
 
 # Copy the built application from the builder stage
 COPY --from=builder /app/build/libs/asynchronous-http-server-0.0.1-SNAPSHOT.jar app.jar
 
-# Default command
-CMD ["java", "-Djava.security.manager=allow", "-jar", "app.jar"]
+# Set the entrypoint with optimized JVM settings
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

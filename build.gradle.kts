@@ -43,8 +43,29 @@ dependencies {
 	testRuntimeOnly(libs.junit.platform.launcher)
 }
 
+// Add a task for pre-downloading dependencies (used in Dockerfile for layer caching)
+tasks.register("downloadDependencies") {
+	description = "Download all dependencies to the Gradle cache"
+	doLast {
+		configurations.compileClasspath.get().files
+		configurations.runtimeClasspath.get().files
+		configurations.testCompileClasspath.get().files
+		configurations.testRuntimeClasspath.get().files
+	}
+}
+
+// Configure build tasks
 tasks.withType<Test> {
 	useJUnitPlatform()
+	// Increase parallel test execution
+	maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).takeIf { it > 0 } ?: 1
+}
+
+// Configure Java compilation for speed
+tasks.withType<JavaCompile> {
+	options.compilerArgs.add("-Xlint:none")
+	options.isFork = true
+	options.isIncremental = true
 }
 
 spotless {
