@@ -30,7 +30,7 @@ FROM docker.io/amazoncorretto:23-alpine AS runtime
 WORKDIR /app
 
 # Add JVM optimization flags
-ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Dspring.profiles.active=production"
+ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -Dspring.profiles.active=production -Djava.security.manager=allow"
 
 # Copy the built application from the builder stage
 COPY --from=builder /app/build/libs/asynchronous-http-server-0.0.1-SNAPSHOT.jar app.jar
