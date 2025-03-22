@@ -17,6 +17,7 @@ spring-kafka-test = { module = "org.springframework.kafka:spring-kafka-test" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 micrometer-tracing-bridge-otel = { module = "io.micrometer:micrometer-tracing-bridge-otel" }
 opentelemetry-exporter-otlp = { module = "io.opentelemetry:opentelemetry-exporter-otlp" }
+micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus" }
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

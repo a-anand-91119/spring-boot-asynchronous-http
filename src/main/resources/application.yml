@@ -10,7 +10,6 @@ spring:
   threads:
     virtual:
       enabled: ${ENABLE_VIRTUAL_THREADS:true}
-
 management:
   tracing:
     enabled: ${ENABLE_TRACES:true}
@@ -19,7 +18,13 @@ management:
   otlp:
     tracing:
       endpoint: ${OLTP_TRACING_ENDPOINT:http://localhost:4318/v1/traces}
-
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 project:
   ui-app:
     hosts: "*"
