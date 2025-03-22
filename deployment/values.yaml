@@ -24,8 +24,6 @@ service:
 podAnnotations:
   linkerd.io/inject: enabled
 
-
-
 sealedSecrets:
   enabled: true
   name: &sealed-secret-name async-http-server-secrets
