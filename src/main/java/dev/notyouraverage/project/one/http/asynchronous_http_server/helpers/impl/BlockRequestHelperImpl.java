@@ -3,9 +3,11 @@ package dev.notyouraverage.project.one.http.asynchronous_http_server.helpers.imp
 import dev.notyouraverage.project.base.annotations.ServiceHelper;
 import dev.notyouraverage.project.core.dtos.kafka.ProcessedResponsePayload;
 import dev.notyouraverage.project.one.http.asynchronous_http_server.helpers.BlockRequestHelper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @ServiceHelper
 public class BlockRequestHelperImpl implements BlockRequestHelper {
 
@@ -26,8 +28,10 @@ public class BlockRequestHelperImpl implements BlockRequestHelper {
     @Override
     public void lockThread(String requestId) throws InterruptedException {
         Object lockObject = this.lockMap.get(requestId);
-        if (lockObject == null)
-            throw new RuntimeException("Cannot lock thread '" + requestId + "'. Lock not initialized");
+        if (lockObject == null) {
+            log.error("Cannot unlock thread '{}'. Lock not initialized", requestId);
+            return;
+        }
         synchronized (lockObject) {
             lockObject.wait();
         }
@@ -36,8 +40,10 @@ public class BlockRequestHelperImpl implements BlockRequestHelper {
     @Override
     public void unlockThread(String requestId) {
         Object lockObject = this.lockMap.get(requestId);
-        if (lockObject == null)
-            throw new RuntimeException("Cannot unlock thread '" + requestId + "'. Lock already released");
+        if (lockObject == null) {
+            log.error("Cannot unlock thread '{}'. Lock already released", requestId);
+            return;
+        }
         synchronized (lockObject) {
             lockObject.notify();
         }

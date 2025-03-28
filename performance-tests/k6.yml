@@ -1,0 +1,11 @@
+apiVersion: k6.io/v1alpha1 
+kind: TestRun
+metadata:
+  name: asynchronous-http-server-load-test
+  namespace: k6-operator
+spec: 
+  parallelism: 4 
+  script:
+    configMap:
+      name: asynchronous-http-server-load-test
+      file: load-test.js
