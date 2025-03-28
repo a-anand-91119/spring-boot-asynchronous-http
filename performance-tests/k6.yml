@@ -9,3 +9,4 @@ spec:
     configMap:
       name: asynchronous-http-server-load-test
       file: load-test.js
+
