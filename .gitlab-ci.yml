@@ -9,6 +9,6 @@ stages:
 
 workflow:
   rules:
-    - if: '$CI_SERVER_URL == "https://gitlab.notyourverage.dev"'
+    - if: $CI_SERVER_URL == "https://gitlab.notyouraverage.dev"
       when: always
     - when: never
