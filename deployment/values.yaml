@@ -35,7 +35,7 @@ monitoring:
   enabled: true
   serviceMonitor:
     enabled: true
-    namespace: "observability"
+    namespace: "monitoring"
 environmentVariables:
   - name: KAFKA_BOOTSTRAP_SERVERS
     value: apache-kafka.kafka.svc.cluster.local:9092
