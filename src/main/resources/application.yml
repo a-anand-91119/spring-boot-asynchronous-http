@@ -11,6 +11,9 @@ spring:
     virtual:
       enabled: ${ENABLE_VIRTUAL_THREADS:true}
 management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
   tracing:
     enabled: ${ENABLE_TRACES:true}
     sampling:
