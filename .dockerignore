@@ -7,7 +7,6 @@
 build/
 out/
 target/
-*.class
 
 # Gradle
 .gradle/
@@ -27,7 +26,6 @@ Thumbs.db
 # IDE files
 .idea/
 .vscode/
-*.iml
 *.ipr
 *.iws
 
@@ -60,4 +58,3 @@ deployment/
 !libs.versions.toml
 !spotless.xml
 !gradlew
-!gradle/wrapper/ 
